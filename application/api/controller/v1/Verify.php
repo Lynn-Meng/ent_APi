@@ -6,6 +6,7 @@
  * Time: 上午10:37
  */
 namespace app\api\controller\v1;
+use app\api\controller\Base;
 use app\common\lib\Aes;
 use app\common\lib\IAuth;
 use think\Validate;
@@ -78,5 +79,54 @@ class Verify extends Base
             ];
             return showJson(1,'登录成功',$resukt,200);
         }
+    }
+
+    public function update()
+    {
+        $data = input('put.');
+        $phone = $this->checkPhone($data['phone']);
+        $password = md5($this->checkPhone($data['password']));
+        $useranme = $data['username'];
+        $sex = $data['sex'];
+        //对电话进行校验
+        $validate = new Validate(['phone' => 'require|number|length:11']);
+        if ($validate->check($phone))
+        {
+            return showJson(0,$validate->getError(),[],400);
+        }
+        //校验电话在数据库中是否存在 如果存在 就更新信息 否则添加一条信息
+        $res = model('User')->get(['phone' => $phone]);
+        $conData['phone'] = $phone;
+        $conData['username'] = $useranme;
+        $conData['password'] = $password;
+        $conData['sex'] = $sex;
+        if ($res)
+        {
+
+            $result = model('User')->save($conData,['phone' => $phone]);
+            if ($result)
+            {
+                return showJson(1,'数据更新成功',[],200);
+            }
+            else
+            {
+                return showJson(0,'数据更新失败',[],201);
+
+            }
+        }
+        else
+        {
+            $result = model('User')->save($conData);
+            if ($result)
+            {
+                return showJson(1,'数据新增成功',[],200);
+            }
+            else
+            {
+                return showJson(0,'数据新增成功',[],201);
+
+            }
+        }
+
     }
 }

@@ -7,6 +7,7 @@
  */
 namespace app\api\controller\v1;
 use Aliyun\api_demo\SmsDemo;
+use app\api\controller\Base;
 use app\common\lib\Aliyun;
 use app\common\lib\ApiException;
 use app\common\MsgAliyun;

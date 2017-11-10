@@ -6,6 +6,7 @@
  * Time: 上午9:43
  */
 namespace app\api\controller\v1;
+use app\api\controller\Base;
 use app\common\lib\Aliyun;
 use think\Validate;
 
